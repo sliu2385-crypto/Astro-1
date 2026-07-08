@@ -12,10 +12,10 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4.1.7
-      
+        uses: actions/checkout@v4
+
       - name: Set up Python
-        uses: actions/setup-python@v5.0.0
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
       
@@ -41,7 +41,7 @@ jobs:
       
       - name: Upload logs
         if: always()
-        uses: actions/upload-artifact@v4.3.1
+        uses: actions/upload-artifact@v4
         with:
           name: execution-logs
           path: logs/news_execution.log
