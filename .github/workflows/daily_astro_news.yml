@@ -1,0 +1,44 @@
+name: Daily Astrophysics News Report
+
+# Run every day at 9:00 AM UTC (adjust time as needed)
+on:
+  schedule:
+    - cron: '0 9 * * *'  # 9:00 AM UTC daily
+  workflow_dispatch:  # Allow manual trigger for testing
+
+jobs:
+  send-news-report:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      - name: Run astrophysics news scraper
+        env:
+          GMAIL_USER: ${{ secrets.GMAIL_USER }}
+          GMAIL_PASSWORD: ${{ secrets.GMAIL_PASSWORD }}
+          RECIPIENT_EMAIL: ${{ secrets.RECIPIENT_EMAIL }}
+        run: |
+          python astro_news_scraper.py
+      
+      - name: Log execution
+        run: |
+          echo "Daily astrophysics news report executed at $(date)" >> news_execution.log
+      
+      - name: Upload logs
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: execution-logs
+          path: news_execution.log
