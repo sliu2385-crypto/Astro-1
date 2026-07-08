@@ -32,13 +32,17 @@ jobs:
         run: |
           python astro_news_scraper.py
       
-      - name: Log execution
+      - name: Create execution log
+        if: always()
         run: |
-          echo "Daily astrophysics news report executed at $(date)" >> news_execution.log
+          mkdir -p logs
+          echo "Daily astrophysics news report executed at $(date)" >> logs/news_execution.log
+          echo "Workflow status: ${{ job.status }}" >> logs/news_execution.log
       
       - name: Upload logs
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: execution-logs
-          path: news_execution.log
+          path: logs/news_execution.log
+          if-no-files-found: warn
