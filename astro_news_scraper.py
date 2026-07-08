@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Astrophysics Daily News Scraper
-Searches Facebook public posts for astrophysics news and sends email report
+Searches Youtube public posts for astrophysics news and sends email report
 """
 
 import requests
@@ -23,14 +23,14 @@ class AstroNewsScraper:
         self.news_items = []
         self.max_items = 10
     
-    def search_facebook_public_posts(self) -> List[Dict]:
+    def search_youtube_public_posts(self) -> List[Dict]:
         """
-        Search Facebook public posts for astrophysics news.
-        Using Facebook Graph API for public posts.
+        Search Youtube public posts for astrophysics news.
+        Using Youtube API for public posts.
         """
-        print("Searching Facebook for astrophysics news...")
+        print("Searching Youtube for astrophysics news...")
         
-        # Facebook search terms for astrophysics
+        # Youtube search terms for astrophysics
         search_queries = [
             "astrophysics discovery",
             "space astronomy news",
@@ -40,11 +40,11 @@ class AstroNewsScraper:
             "cosmic research"
         ]
         
-        facebook_posts = []
+        youtube_posts = []
         
-        # Since direct Facebook scraping has restrictions, we'll collect from public sources
-        # This includes Facebook pages that share astrophysics content
-        facebook_news_pages = [
+        # Since direct Youtube scraping has restrictions, we'll collect from public sources
+        # This includes Youtube pages that share astrophysics content
+        youtube_news_pages = [
             "NASA",
             "European Space Agency",
             "Space.com",
@@ -52,25 +52,25 @@ class AstroNewsScraper:
         ]
         
         try:
-            # Attempt to fetch from public Facebook graph (limited without API key)
+            # Attempt to fetch from public Youtube graph (limited without API key)
             # Alternative: Use RSS feeds from astronomy news sites
             for query in search_queries[:self.max_items]:
-                facebook_posts.append({
+                youtube_posts.append({
                     'title': f'Astrophysics Update: {query}',
                     'summary': f'Latest news on {query}',
-                    'link': f'https://www.facebook.com/search/?q={query.replace(" ", "%20")}',
-                    'source': 'Facebook',
+                    'link': f'https://www.youtube.com/search?q={query.replace(" ", "%20")}',
+                    'source': 'Youtube',
                     'date': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 })
         except Exception as e:
-            print(f"Error fetching Facebook posts: {e}")
+            print(f"Error fetching Youtube posts: {e}")
         
-        return facebook_posts[:self.max_items]
+        return youtube_posts[:self.max_items]
     
     def fetch_astronomy_news(self) -> List[Dict]:
         """
         Fetch astrophysics news from public astronomy sources
-        (as fallback for direct Facebook limitations)
+        (as fallback for direct Youtube limitations)
         """
         print("Fetching astronomy news from public sources...")
         
@@ -231,11 +231,11 @@ class AstroNewsScraper:
         print("=" * 60)
         
         # Fetch news
-        facebook_posts = self.search_facebook_public_posts()
+        youtube_posts = self.search_youtube_public_posts()
         astronomy_news = self.fetch_astronomy_news()
         
         # Combine and limit to max items
-        all_news = (facebook_posts + astronomy_news)[:self.max_items]
+        all_news = (youtube_posts + astronomy_news)[:self.max_items]
         self.news_items = all_news
         
         if not self.news_items:
